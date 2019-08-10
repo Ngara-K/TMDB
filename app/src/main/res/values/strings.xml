@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TMDB</string>
+    <string name="tmdb_logo">TMDB Logo</string>
 </resources>
