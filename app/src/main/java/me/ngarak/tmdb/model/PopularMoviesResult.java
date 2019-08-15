@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.xml.transform.Result;
+/*
+* * POJO CLASS FOR RETRIEVING LIST OF POPULAR MOVIES // GETTERS AND SETTERS
+* */
 
 public class PopularMoviesResult implements Serializable {
 

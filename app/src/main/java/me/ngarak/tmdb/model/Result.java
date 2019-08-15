@@ -6,6 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+/*
+* POJO CLASS FOR RETRIEVING MOVIE DETAILS
+* GETTERS AND SETTERS
+* */
+
 public class Result implements Serializable {
 
     @SerializedName("vote_count")

@@ -22,9 +22,10 @@ import static me.ngarak.tmdb.model.movieImagePathBuilder.pathBuilder;
 
 public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Adapter.MovieHolder> {
 
-    Context context;
+    private Context context;
     private final List<Result> resultList;
 
+    //Initializing Constructor
     public popularMovies_Adapter(PopularMovies popularMovies, List<Result> resultList) {
         this.context = popularMovies;
         this.resultList = resultList;
@@ -39,11 +40,15 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
+        //Bind t received Data
         holder.movieTitle.setText(resultList.get(position).getTitle());
         holder.releaseDate.setText(resultList.get(position).getReleaseDate());
-        holder.voteCount.setText(resultList.get(position).getVoteCount());
-
-        Glide.with(context).load(pathBuilder(resultList.get(position).getPosterPath())).into(holder.moviePoster);
+        holder.voteCount.setText(String.valueOf(resultList.get(position).getVoteCount()));
+        //Using Glide library to load image
+        Glide.with(context)
+                .load(pathBuilder(resultList.get(position).getPosterPath()))
+                .placeholder(R.drawable.tmdb_placeholder)
+                .into(holder.moviePoster);
     }
 
     @Override
@@ -52,7 +57,7 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
-
+        //Defining views
         TextView movieTitle;
         TextView releaseDate;
         TextView voteCount;
