@@ -1,5 +1,6 @@
 package me.ngarak.tmdb.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,12 @@ import static me.ngarak.tmdb.model.movieImagePathBuilder.pathBuilder;
 
 public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Adapter.MovieHolder> {
 
+    private final MovieOnClickListener movieOnClickListener;
     private final List<Result> resultList;
 
     //Initializing Constructor
-    public popularMovies_Adapter(List<Result> resultList) {
+    public popularMovies_Adapter(List<Result> resultList, MovieOnClickListener movieOnClickListener) {
+        this.movieOnClickListener = movieOnClickListener;
         this.resultList = resultList;
     }
 
@@ -37,7 +40,7 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
         //Bind received Data
-        holder.bind(resultList.get(position));
+        holder.bind(resultList.get(position), movieOnClickListener);
     }
 
     @Override
@@ -61,7 +64,7 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
             moviePoster = itemView.findViewById(R.id.movie_poster);
         }
 
-        public void bind(Result result) {
+        public void bind(final Result result, final MovieOnClickListener movieOnClickListener) {
 
             movieTitle.setText(result.getTitle());
             releaseDate.setText(result.getReleaseDate());
@@ -72,6 +75,22 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
                     .placeholder(R.drawable.tmdb_placeholder)
                     .into(moviePoster);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    movieOnClickListener.onClick(result);
+                    Log.d("TAG", "onClick: " + result.getTitle());
+                }
+            });
         }
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull MovieHolder holder) {
+        super.onViewRecycled(holder);
+    }
+
+    public interface MovieOnClickListener {
+        void onClick(Result result);
     }
 }

@@ -1,5 +1,6 @@
 package me.ngarak.tmdb;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import me.ngarak.tmdb.adapter.popularMovies_Adapter;
+import me.ngarak.tmdb.adapter.popularMovies_Adapter.MovieOnClickListener;
 import me.ngarak.tmdb.model.PopularMoviesResult;
 import me.ngarak.tmdb.model.Result;
 import me.ngarak.tmdb.query.MovieListQuery;
@@ -93,7 +95,19 @@ public class PopularMovies extends AppCompatActivity {
                         Log.d("TAG", "TOTAL PAGES: " + totalPages);
 
                         //Setting Adapter to the RecyclerView
-                        popularMoviesAdapter = new popularMovies_Adapter(resultList);
+                        popularMoviesAdapter = new popularMovies_Adapter(resultList, new MovieOnClickListener() {
+                            @Override
+                            public void onClick(Result result) {
+                                Log.d("TAG", "onClick_ID: " + result.getId());
+
+                                Intent intent = new Intent(PopularMovies.this, MovieDetails.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("result", result);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        });
+
                         recyclerView.setAdapter(popularMoviesAdapter);
                     } else {
                         Toast.makeText(PopularMovies.this, "No response", Toast.LENGTH_SHORT).show();
