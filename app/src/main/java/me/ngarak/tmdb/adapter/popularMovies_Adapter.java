@@ -1,6 +1,5 @@
 package me.ngarak.tmdb.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import me.ngarak.tmdb.PopularMovies;
 import me.ngarak.tmdb.R;
 import me.ngarak.tmdb.model.Result;
 
@@ -22,12 +20,10 @@ import static me.ngarak.tmdb.model.movieImagePathBuilder.pathBuilder;
 
 public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Adapter.MovieHolder> {
 
-    private Context context;
     private final List<Result> resultList;
 
     //Initializing Constructor
-    public popularMovies_Adapter(PopularMovies popularMovies, List<Result> resultList) {
-        this.context = popularMovies;
+    public popularMovies_Adapter(List<Result> resultList) {
         this.resultList = resultList;
     }
 
@@ -40,20 +36,13 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
-        //Bind t received Data
-        holder.movieTitle.setText(resultList.get(position).getTitle());
-        holder.releaseDate.setText(resultList.get(position).getReleaseDate());
-        holder.voteCount.setText(String.valueOf(resultList.get(position).getVoteCount()));
-        //Using Glide library to load image
-        Glide.with(context)
-                .load(pathBuilder(resultList.get(position).getPosterPath()))
-                .placeholder(R.drawable.tmdb_placeholder)
-                .into(holder.moviePoster);
+        //Bind received Data
+        holder.bind(resultList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return resultList.size();
+        return this.resultList.size();
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
@@ -71,10 +60,18 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
             voteCount = itemView.findViewById(R.id.vote_count);
             moviePoster = itemView.findViewById(R.id.movie_poster);
         }
-    }
 
-    @Override
-    public void onViewRecycled(@NonNull MovieHolder holder) {
-        super.onViewRecycled(holder);
+        public void bind(Result result) {
+
+            movieTitle.setText(result.getTitle());
+            releaseDate.setText(result.getReleaseDate());
+            voteCount.setText(String.valueOf(result.getVoteCount()));
+            //Using Glide library to load image
+            Glide.with(itemView)
+                    .load(pathBuilder(result.getPosterPath()))
+                    .placeholder(R.drawable.tmdb_placeholder)
+                    .into(moviePoster);
+
+        }
     }
 }
