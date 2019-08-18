@@ -11,7 +11,7 @@ import java.util.List;
 * GETTERS AND SETTERS
 * */
 
-public class Result implements Serializable {
+public class Movie implements Serializable {
 
     @SerializedName("vote_count")
     @Expose
@@ -57,10 +57,10 @@ public class Result implements Serializable {
     private String releaseDate;
     private final static long serialVersionUID = -6786212654509805234L;
 
-    public Result() {
+    public Movie() {
     }
 
-    public Result(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
+    public Movie(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
         super();
         this.voteCount = voteCount;
         this.id = id;
@@ -86,7 +86,7 @@ public class Result implements Serializable {
         this.voteCount = voteCount;
     }
 
-    public Result withVoteCount(Integer voteCount) {
+    public Movie withVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
         return this;
     }
@@ -99,7 +99,7 @@ public class Result implements Serializable {
         this.id = id;
     }
 
-    public Result withId(Integer id) {
+    public Movie withId(Integer id) {
         this.id = id;
         return this;
     }
@@ -112,7 +112,7 @@ public class Result implements Serializable {
         this.video = video;
     }
 
-    public Result withVideo(Boolean video) {
+    public Movie withVideo(Boolean video) {
         this.video = video;
         return this;
     }
@@ -125,7 +125,7 @@ public class Result implements Serializable {
         this.voteAverage = voteAverage;
     }
 
-    public Result withVoteAverage(Double voteAverage) {
+    public Movie withVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
         return this;
     }
@@ -138,7 +138,7 @@ public class Result implements Serializable {
         this.title = title;
     }
 
-    public Result withTitle(String title) {
+    public Movie withTitle(String title) {
         this.title = title;
         return this;
     }
@@ -151,7 +151,7 @@ public class Result implements Serializable {
         this.popularity = popularity;
     }
 
-    public Result withPopularity(Double popularity) {
+    public Movie withPopularity(Double popularity) {
         this.popularity = popularity;
         return this;
     }
@@ -164,7 +164,7 @@ public class Result implements Serializable {
         this.posterPath = posterPath;
     }
 
-    public Result withPosterPath(String posterPath) {
+    public Movie withPosterPath(String posterPath) {
         this.posterPath = posterPath;
         return this;
     }
@@ -177,7 +177,7 @@ public class Result implements Serializable {
         this.originalLanguage = originalLanguage;
     }
 
-    public Result withOriginalLanguage(String originalLanguage) {
+    public Movie withOriginalLanguage(String originalLanguage) {
         this.originalLanguage = originalLanguage;
         return this;
     }
@@ -190,7 +190,7 @@ public class Result implements Serializable {
         this.originalTitle = originalTitle;
     }
 
-    public Result withOriginalTitle(String originalTitle) {
+    public Movie withOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
         return this;
     }
@@ -203,7 +203,7 @@ public class Result implements Serializable {
         this.genreIds = genreIds;
     }
 
-    public Result withGenreIds(List<Integer> genreIds) {
+    public Movie withGenreIds(List<Integer> genreIds) {
         this.genreIds = genreIds;
         return this;
     }
@@ -216,7 +216,7 @@ public class Result implements Serializable {
         this.backdropPath = backdropPath;
     }
 
-    public Result withBackdropPath(String backdropPath) {
+    public Movie withBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
         return this;
     }
@@ -229,7 +229,7 @@ public class Result implements Serializable {
         this.adult = adult;
     }
 
-    public Result withAdult(Boolean adult) {
+    public Movie withAdult(Boolean adult) {
         this.adult = adult;
         return this;
     }
@@ -242,7 +242,7 @@ public class Result implements Serializable {
         this.overview = overview;
     }
 
-    public Result withOverview(String overview) {
+    public Movie withOverview(String overview) {
         this.overview = overview;
         return this;
     }
@@ -255,7 +255,7 @@ public class Result implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    public Result withReleaseDate(String releaseDate) {
+    public Movie withReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
         return this;
     }

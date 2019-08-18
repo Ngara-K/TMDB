@@ -10,7 +10,7 @@ import java.util.List;
 * * POJO CLASS FOR RETRIEVING LIST OF POPULAR MOVIES // GETTERS AND SETTERS
 * */
 
-public class PopularMoviesResult implements Serializable {
+public class MoviesResult implements Serializable {
 
     @SerializedName("page")
     @Expose
@@ -23,18 +23,18 @@ public class PopularMoviesResult implements Serializable {
     private int totalPages;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<Movie> movies = null;
     private final static long serialVersionUID = -995812242794266891L;
 
-    public PopularMoviesResult() {
+    public MoviesResult() {
     }
 
-    public PopularMoviesResult(int page, int totalResults, int totalPages, List<Result> results) {
+    public MoviesResult(int page, int totalResults, int totalPages, List<Movie> movies) {
         super();
         this.page = page;
         this.totalResults = totalResults;
         this.totalPages = totalPages;
-        this.results = results;
+        this.movies = movies;
     }
 
     public int getPage() {
@@ -45,7 +45,7 @@ public class PopularMoviesResult implements Serializable {
         this.page = page;
     }
 
-    public PopularMoviesResult withPage(int page) {
+    public MoviesResult withPage(int page) {
         this.page = page;
         return this;
     }
@@ -58,7 +58,7 @@ public class PopularMoviesResult implements Serializable {
         this.totalResults = totalResults;
     }
 
-    public PopularMoviesResult withTotalResults(int totalResults) {
+    public MoviesResult withTotalResults(int totalResults) {
         this.totalResults = totalResults;
         return this;
     }
@@ -71,21 +71,21 @@ public class PopularMoviesResult implements Serializable {
         this.totalPages = totalPages;
     }
 
-    public PopularMoviesResult withTotalPages(int totalPages) {
+    public MoviesResult withTotalPages(int totalPages) {
         this.totalPages = totalPages;
         return this;
     }
 
-    public List<Result> getResults() {
-        return results;
+    public List<Movie> getMovies() {
+        return movies;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
     }
 
-    public PopularMoviesResult withResults(List<Result> results) {
-        this.results = results;
+    public MoviesResult withResults(List<Movie> movies) {
+        this.movies = movies;
         return this;
     }
 }
