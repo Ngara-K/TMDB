@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">TMDB</string>
     <string name="tmdb_logo">TMDB Logo</string>
+    <string name="movie_poster">movie poster</string>
+    <string name="vote_count">Vote Count</string>
+    <string name="release_date">Release Date</string>
+    <string name="similar_movies">Similar Movies</string>
 </resources>

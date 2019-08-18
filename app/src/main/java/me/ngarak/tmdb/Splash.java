@@ -13,7 +13,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        //Delaying up to 2 sec to Popular Movies
+        //Delaying up to 2 sec to Popular Movies class
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
