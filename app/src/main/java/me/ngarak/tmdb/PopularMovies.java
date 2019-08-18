@@ -1,5 +1,6 @@
 package me.ngarak.tmdb;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -98,6 +99,12 @@ public class PopularMovies extends AppCompatActivity {
                             @Override
                             public void onClick(Movie movie) {
                                 Log.d("TAG", "onClick_ID: " + movie.getId());
+
+                                Intent intent = new Intent(PopularMovies.this, MovieDetails.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("movie", movie);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
                             }
                         });
 
