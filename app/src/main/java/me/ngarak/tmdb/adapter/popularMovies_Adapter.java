@@ -15,19 +15,19 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import me.ngarak.tmdb.R;
-import me.ngarak.tmdb.model.Result;
+import me.ngarak.tmdb.model.Movie;
 
 import static me.ngarak.tmdb.model.movieImagePathBuilder.pathBuilder;
 
 public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Adapter.MovieHolder> {
 
     private final MovieOnClickListener movieOnClickListener;
-    private final List<Result> resultList;
+    private final List<Movie> movieList;
 
     //Initializing Constructor
-    public popularMovies_Adapter(List<Result> resultList, MovieOnClickListener movieOnClickListener) {
+    public popularMovies_Adapter(List<Movie> movieList, MovieOnClickListener movieOnClickListener) {
         this.movieOnClickListener = movieOnClickListener;
-        this.resultList = resultList;
+        this.movieList = movieList;
     }
 
     @NonNull
@@ -40,12 +40,12 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
         //Bind received Data
-        holder.bind(resultList.get(position), movieOnClickListener);
+        holder.bind(movieList.get(position), movieOnClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return this.resultList.size();
+        return this.movieList.size();
     }
 
     public class MovieHolder extends RecyclerView.ViewHolder {
@@ -64,22 +64,22 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
             moviePoster = itemView.findViewById(R.id.movie_poster);
         }
 
-        public void bind(final Result result, final MovieOnClickListener movieOnClickListener) {
+        public void bind(final Movie movie, final MovieOnClickListener movieOnClickListener) {
 
-            movieTitle.setText(result.getTitle());
-            releaseDate.setText(result.getReleaseDate());
-            voteCount.setText(String.valueOf(result.getVoteCount()));
+            movieTitle.setText(movie.getTitle());
+            releaseDate.setText(movie.getReleaseDate());
+            voteCount.setText(String.valueOf(movie.getVoteCount()));
             //Using Glide library to load image
             Glide.with(itemView)
-                    .load(pathBuilder(result.getPosterPath()))
+                    .load(pathBuilder(movie.getPosterPath()))
                     .placeholder(R.drawable.tmdb_placeholder)
                     .into(moviePoster);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    movieOnClickListener.onClick(result);
-                    Log.d("TAG", "onClick: " + result.getTitle());
+                    movieOnClickListener.onClick(movie);
+                    Log.d("TAG", "onClick: " + movie.getTitle());
                 }
             });
         }
@@ -91,6 +91,6 @@ public class popularMovies_Adapter extends RecyclerView.Adapter<popularMovies_Ad
     }
 
     public interface MovieOnClickListener {
-        void onClick(Result result);
+        void onClick(Movie movie);
     }
 }

@@ -15,9 +15,9 @@ import java.util.List;
 
 import me.ngarak.tmdb.adapter.popularMovies_Adapter;
 import me.ngarak.tmdb.adapter.popularMovies_Adapter.MovieOnClickListener;
-import me.ngarak.tmdb.model.PopularMoviesResult;
-import me.ngarak.tmdb.model.Result;
-import me.ngarak.tmdb.query.MovieListQuery;
+import me.ngarak.tmdb.model.Movie;
+import me.ngarak.tmdb.model.MoviesResult;
+import me.ngarak.tmdb.query.TMDB_Queries;
 import me.ngarak.tmdb.utils.InfiniteScroll;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,8 +26,8 @@ import retrofit2.Response;
 public class PopularMovies extends AppCompatActivity {
 
     public static final String API_KEY = BuildConfig.TMDB_API_KEY;
-    private Call<PopularMoviesResult> moviesResultCall;
-    private List<Result> resultList;
+    private Call<MoviesResult> moviesResultCall;
+    private List<Movie> movieList;
     private int totalPages;
     private int currentPage = 1;
     private popularMovies_Adapter popularMoviesAdapter;
@@ -35,7 +35,7 @@ public class PopularMovies extends AppCompatActivity {
 
     private LinearLayoutManager linearLayoutManager;
 
-    private MovieListQuery movieListQuery;
+    private TMDB_Queries tmdb_queries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class PopularMovies extends AppCompatActivity {
         recyclerView = findViewById(R.id.popularMoviesRecycler);
 
         //Initializing Retrofit Instance for Movie List
-        movieListQuery = RetrofitInstance.getRetrofitInst().create(MovieListQuery.class);
+        tmdb_queries = RetrofitInstance.getRetrofitInst().create(TMDB_Queries.class);
 
         //Setting RecyclerView layout
         linearLayoutManager = new LinearLayoutManager(this);
@@ -80,29 +80,29 @@ public class PopularMovies extends AppCompatActivity {
     private void loadPopularMovies(final int page) {
         Log.d("TAG", "loadPopularMovies: Loading ..   " + page);
         //Get list of movies of per page
-        moviesResultCall = movieListQuery.getPopularMovies(page, API_KEY);
+        moviesResultCall = tmdb_queries.getPopularMovies(page, API_KEY);
         //Retrofit Call for list of movies
-        moviesResultCall.enqueue(new Callback<PopularMoviesResult>() {
+        moviesResultCall.enqueue(new Callback<MoviesResult>() {
             @Override
-            public void onResponse(@NonNull Call<PopularMoviesResult> call, @NonNull Response<PopularMoviesResult> response) {
+            public void onResponse(@NonNull Call<MoviesResult> call, @NonNull Response<MoviesResult> response) {
 
                 if (page == 1) {
                     if (response.body() != null) {
                         //Get list of movies to @Result class
-                        resultList = getResultsList(response);
+                        movieList = getResultsList(response);
                         //Get number of pages
                         totalPages = response.body().getTotalPages();
                         Log.d("TAG", "TOTAL PAGES: " + totalPages);
 
                         //Setting Adapter to the RecyclerView
-                        popularMoviesAdapter = new popularMovies_Adapter(resultList, new MovieOnClickListener() {
+                        popularMoviesAdapter = new popularMovies_Adapter(movieList, new MovieOnClickListener() {
                             @Override
-                            public void onClick(Result result) {
-                                Log.d("TAG", "onClick_ID: " + result.getId());
+                            public void onClick(Movie movie) {
+                                Log.d("TAG", "onClick_ID: " + movie.getId());
 
                                 Intent intent = new Intent(PopularMovies.this, MovieDetails.class);
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("result", result);
+                                bundle.putSerializable("movie", movie);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                             }
@@ -116,18 +116,18 @@ public class PopularMovies extends AppCompatActivity {
 
                 else {
                     //Appending data to the list
-                    List<Result> results = getResultsList(response);
-                    if (results != null) {
-                        for (Result result : results) {
-                            resultList.add(result);
-                            popularMoviesAdapter.notifyItemInserted(resultList.size() - 1);
+                    List<Movie> movies = getResultsList(response);
+                    if (movies != null) {
+                        for (Movie movie : movies) {
+                            movieList.add(movie);
+                            popularMoviesAdapter.notifyItemInserted(movies.size() - 1);
                         }
                     }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<PopularMoviesResult> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<MoviesResult> call, @NonNull Throwable t) {
                 //Log and toast on failure
                 Log.d("TAG", "onFailure: " + t);
                 Toast.makeText(PopularMovies.this, "Error : " + t, Toast.LENGTH_SHORT).show();
@@ -136,8 +136,8 @@ public class PopularMovies extends AppCompatActivity {
     }
 
     //Get Result of the fetched data
-    private List<Result> getResultsList(Response<PopularMoviesResult> response) {
-        PopularMoviesResult popularMoviesResult = response.body();
-        return popularMoviesResult != null ? popularMoviesResult.getResults() : null;
+    private List<Movie> getResultsList(Response<MoviesResult> response) {
+        MoviesResult popularMoviesResult = response.body();
+        return popularMoviesResult != null ? popularMoviesResult.getMovies() : null;
     }
 }
