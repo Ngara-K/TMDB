@@ -165,6 +165,7 @@ public class PopularMovies extends AppCompatActivity {
 
             private void exportToSCV () {
 
+                //directory to save scv file
                 File exportDir = new File(Environment.getExternalStorageDirectory(), "tmdb");
                 if (!exportDir.exists()) {
                     exportDir.mkdirs();
@@ -174,6 +175,7 @@ public class PopularMovies extends AppCompatActivity {
                 try {
                     file.createNewFile();
                     CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+                    //selecting from db
                     Cursor curCSV = database.query("SELECT * FROM " + "popular_movies", null);
                     csvWrite.writeNext(curCSV.getColumnNames());
                     while (curCSV.moveToNext()) {
@@ -185,7 +187,6 @@ public class PopularMovies extends AppCompatActivity {
                     }
                     csvWrite.close();
                     curCSV.close();
-                    Toast.makeText(PopularMovies.this, "Exported", Toast.LENGTH_SHORT).show();
                     Log.d("TAG", "exportToSCV: " + exportDir.getAbsolutePath());
                 } catch (Exception sqlEx) {
                     Log.e("LOG_TAG", sqlEx.getMessage(), sqlEx);
