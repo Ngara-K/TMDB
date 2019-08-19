@@ -160,6 +160,36 @@ public class PopularMovies extends AppCompatActivity {
             @Override
             public void onChanged (List<Movie> movieList) {
                 Log.d("TAG", "onChanged: " + movieList.size());
+                exportToSCV();
+            }
+
+            private void exportToSCV () {
+
+                File exportDir = new File(Environment.getExternalStorageDirectory(), "tmdb");
+                if (!exportDir.exists()) {
+                    exportDir.mkdirs();
+                }
+
+                File file = new File(exportDir, "tmdb" + ".csv");
+                try {
+                    file.createNewFile();
+                    CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+                    Cursor curCSV = database.query("SELECT * FROM " + "popular_movies", null);
+                    csvWrite.writeNext(curCSV.getColumnNames());
+                    while (curCSV.moveToNext()) {
+                       
+                        String[] arrStr = new String[curCSV.getColumnCount()];
+                        for (int i = 0; i < curCSV.getColumnCount() - 1; i++)
+                            arrStr[i] = curCSV.getString(i);
+                        csvWrite.writeNext(arrStr);
+                    }
+                    csvWrite.close();
+                    curCSV.close();
+                    Toast.makeText(PopularMovies.this, "Exported", Toast.LENGTH_SHORT).show();
+                    Log.d("TAG", "exportToSCV: " + exportDir.getAbsolutePath());
+                } catch (Exception sqlEx) {
+                    Log.e("LOG_TAG", sqlEx.getMessage(), sqlEx);
+                }
             }
         });
     }
