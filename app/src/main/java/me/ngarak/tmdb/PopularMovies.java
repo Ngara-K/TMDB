@@ -1,23 +1,37 @@
 package me.ngarak.tmdb;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcel;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.DatabaseConfiguration;
+import androidx.room.InvalidationTracker;
+import androidx.room.Room;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 
 import me.ngarak.tmdb.adapter.popularMovies_Adapter;
 import me.ngarak.tmdb.adapter.popularMovies_Adapter.MovieOnClickListener;
+import me.ngarak.tmdb.db.Database;
+import me.ngarak.tmdb.db.MoviesDAO;
 import me.ngarak.tmdb.model.Movie;
 import me.ngarak.tmdb.model.MoviesResult;
 import me.ngarak.tmdb.query.TMDB_Queries;
+import me.ngarak.tmdb.utils.CSVWriter;
 import me.ngarak.tmdb.utils.InfiniteScroll;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +50,7 @@ public class PopularMovies extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
 
     private TMDB_Queries tmdb_queries;
+    private Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +69,6 @@ public class PopularMovies extends AppCompatActivity {
         //RecyclerView item decorator
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
-//        recyclerView.setAdapter(popularMoviesAdapter);
 
         //Infinite Scroll Listener
         recyclerView.addOnScrollListener(new InfiniteScroll(linearLayoutManager) {
@@ -100,6 +114,8 @@ public class PopularMovies extends AppCompatActivity {
                             public void onClick(Movie movie) {
                                 Log.d("TAG", "onClick_ID: " + movie.getId());
 
+                                addToSQLITE (movie);
+
                                 Intent intent = new Intent(PopularMovies.this, MovieDetails.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("movie", movie);
@@ -135,9 +151,54 @@ public class PopularMovies extends AppCompatActivity {
         });
     }
 
+    private void addToSQLITE (Movie movie) {
+        database = Database.getInstance(PopularMovies.this);
+        database.moviesDAO().InsertMovie(movie);
+
+        LiveData<List<Movie>> movieList = database.moviesDAO().getMovies();
+        movieList.observeForever(new Observer<List<Movie>>() {
+            @Override
+            public void onChanged (List<Movie> movieList) {
+                Log.d("TAG", "onChanged: " + movieList.size());
+                exportToSCV();
+            }
+
+            private void exportToSCV () {
+
+                //directory to save scv file
+                File exportDir = new File(Environment.getExternalStorageDirectory(), "tmdb");
+                if (!exportDir.exists()) {
+                    exportDir.mkdirs();
+                }
+
+                File file = new File(exportDir, "tmdb" + ".csv");
+                try {
+                    file.createNewFile();
+                    CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
+                    //selecting from db
+                    Cursor curCSV = database.query("SELECT * FROM " + "popular_movies", null);
+                    csvWrite.writeNext(curCSV.getColumnNames());
+                    while (curCSV.moveToNext()) {
+                       
+                        String[] arrStr = new String[curCSV.getColumnCount()];
+                        for (int i = 0; i < curCSV.getColumnCount() - 1; i++)
+                            arrStr[i] = curCSV.getString(i);
+                        csvWrite.writeNext(arrStr);
+                    }
+                    csvWrite.close();
+                    curCSV.close();
+                    Log.d("TAG", "exportToSCV: " + exportDir.getAbsolutePath());
+                } catch (Exception sqlEx) {
+                    Log.e("LOG_TAG", sqlEx.getMessage(), sqlEx);
+                }
+            }
+        });
+    }
+
     //Get Result of the fetched data
     private List<Movie> getResultsList(Response<MoviesResult> response) {
         MoviesResult popularMoviesResult = response.body();
         return popularMoviesResult != null ? popularMoviesResult.getMovies() : null;
     }
+
 }
