@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,6 +85,11 @@ public class MovieDetails extends AppCompatActivity {
 
         //Get Similar Movies
         getSimilarMovies(movie.getId(), currentPage);
+        
+        //Movie title on ActionBar
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(movie.getTitle().toString());
     }
 
     private void getMovieDetails(String title, String overview, String releaseDate, Double popularity, String originalLanguage, Double voteAverage, String backdropPath) {
