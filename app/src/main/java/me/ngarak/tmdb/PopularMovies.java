@@ -20,6 +20,10 @@ import androidx.room.InvalidationTracker;
 import androidx.room.Room;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.runtime.Permission;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
@@ -70,6 +74,8 @@ public class PopularMovies extends AppCompatActivity {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
+        requestPermission();
+
         //Infinite Scroll Listener
         recyclerView.addOnScrollListener(new InfiniteScroll(linearLayoutManager) {
             @Override
@@ -114,6 +120,7 @@ public class PopularMovies extends AppCompatActivity {
                             public void onClick(Movie movie) {
                                 Log.d("TAG", "onClick_ID: " + movie.getId());
 
+                                requestPermission();
                                 addToSQLITE (movie);
 
                                 Intent intent = new Intent(PopularMovies.this, MovieDetails.class);
@@ -149,6 +156,25 @@ public class PopularMovies extends AppCompatActivity {
                 Toast.makeText(PopularMovies.this, "Error : " + t, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void requestPermission() {
+
+        AndPermission.with(PopularMovies.this)
+                .runtime()
+                .permission(Permission.Group.STORAGE)
+                .onGranted(new Action<List<String>>() {
+                    @Override
+                    public void onAction(List<String> data) {
+//                        Toast.makeText(PopularMovies.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                    }
+                }).onDenied(new Action<List<String>>() {
+            @Override
+            public void onAction(List<String> data) {
+//                Toast.makeText(PopularMovies.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+                requestPermission();
+            }
+        }).start();
     }
 
     private void addToSQLITE (Movie movie) {

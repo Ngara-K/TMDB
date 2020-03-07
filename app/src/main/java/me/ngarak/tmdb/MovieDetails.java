@@ -30,7 +30,7 @@ public class MovieDetails extends AppCompatActivity {
 
     Movie movie;
     ImageView bigHero;
-    TextView title, overview;
+    TextView title, overview, release_date, popularity, language, vote_average;
     RecyclerView recyclerView;
     Call<MoviesResult> moviesResultCall;
     TMDB_Queries tmdb_queries;
@@ -55,6 +55,11 @@ public class MovieDetails extends AppCompatActivity {
         title = findViewById(R.id._title);
         overview = findViewById(R.id.overview);
 
+        release_date = findViewById(R.id._release_date);
+        popularity = findViewById(R.id._popularity);
+        language = findViewById(R.id._original_language);
+        vote_average  = findViewById(R.id._vote_average);
+
         //RecyclerView item decorator
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
         recyclerView.addItemDecoration(itemDecoration);
@@ -66,20 +71,34 @@ public class MovieDetails extends AppCompatActivity {
         movie = (Movie) bundle.getSerializable("movie");
 
         //Get Movie Details
-        getMovieDetails(movie.getTitle(), movie.getOverview(),movie.getBackdropPath());
+        assert movie != null;
+        getMovieDetails(
+                movie.getTitle(),
+                movie.getOverview(),
+                movie.getReleaseDate(),
+                movie.getPopularity(),
+                movie.getOriginalLanguage(),
+                movie.getVoteAverage(),
+                movie.getBackdropPath()
+        );
 
         //Get Similar Movies
         getSimilarMovies(movie.getId(), currentPage);
     }
 
-    private void getMovieDetails(String _title, String _overview, String backdropPath) {
-        title.setText(_title);
-        overview.setText(_overview);
+    private void getMovieDetails(String title, String overview, String releaseDate, Double popularity, String originalLanguage, Double voteAverage, String backdropPath) {
+        this.title.setText(title);
+        this.overview.setText(overview);
         Glide.with(this)
                 .load(pathBuilder(backdropPath))
                 .placeholder(R.drawable.tmdb_placeholder)
                 .into(bigHero);
+        this.release_date.setText(releaseDate);
+        this.popularity.setText(String.valueOf(popularity));
+        this.language.setText(originalLanguage);
+        this.vote_average.setText(String.valueOf(voteAverage));
     }
+
 
     private void getSimilarMovies(Integer movie_id, final int currentPage) {
         //Get list of movies of per page
